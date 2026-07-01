@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <head>
+        <meta charset="UTF-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Factigent Design</title>
   <style>
     :root {
@@ -12,7 +12,7 @@
       color: #eef6fb;
     }
 
-    * {
+     * {
       box-sizing: border-box;
     }
 
@@ -24,7 +24,6 @@
       place-items: center;
       padding: 24px;
     }
-
     .page {
       width: min(1240px, 100%);
       min-height: 780px;
@@ -35,7 +34,6 @@
       grid-template-columns: 1.1fr 0.9fr;
       background: linear-gradient(180deg, #0c4a57 0%, #103b49 38%, #0a4a5d 100%);
     }
-
     .hero-panel,
     .auth-panel {
       padding: 48px 56px;
@@ -43,13 +41,16 @@
       flex-direction: column;
       gap: 36px;
     }
-
     .hero-panel {
       background: linear-gradient(180deg, rgba(15, 87, 110, 0.98), rgba(8, 52, 67, 0.95));
       justify-content: space-between;
       position: relative;
     }
-
+    .hero-panel {
+      background: linear-gradient(180deg, rgba(15, 87, 110, 0.98), rgba(8, 52, 67, 0.95));
+      justify-content: space-between;
+      position: relative;
+    }
     .hero-panel::before {
       content: "";
       position: absolute;
@@ -58,7 +59,6 @@
                   radial-gradient(circle at 80% 50%, rgba(255, 255, 255, 0.08), transparent 18%);
       pointer-events: none;
     }
-
     .hero-panel > * {
       position: relative;
       z-index: 1;
@@ -74,49 +74,43 @@
       border: 1px solid rgba(255, 255, 255, 0.14);
       box-shadow: inset 0 0 0 1px rgba(255,255,255,.06);
     }
-
     .brand-mark svg {
       width: 30px;
       height: 30px;
       filter: drop-shadow(0 4px 16px rgba(0,0,0,0.12));
     }
-
     .hero-copy {
       display: flex;
       flex-direction: column;
       gap: 20px;
     }
-
     .hero-copy h1 {
-      margin: 0;
-      font-size: clamp(3rem, 4vw, 4.8rem);
-      line-height: 0.95;
-      letter-spacing: -0.04em;
-      color: #b8f0ff;
+        margin: 0;
+        font-size: clamp(3rem, 4vw, 4.8rem);
+        line-height: 0.95;
+        letter-spacing: -0.04em;
+        color: #b8f0ff;
     }
-
     .hero-copy p {
-      max-width: 680px;
-      margin: 0;
-      font-size: 1.05rem;
-      line-height: 1.85;
-      color: #d8eef8;
+        max-width: 680px;
+        margin: 0;
+        font-size: 1.05rem;
+        line-height: 1.85;
+        color: #d8eef8;
     }
-
     .hero-stats {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 18px;
-      align-items: stretch;
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 18px;
+        align-items:stretch;
     }
-
     .stat-card {
-      border-radius: 24px;
-      border: 1px solid rgba(255,255,255,0.1);
-      background: rgba(255,255,255,0.05);
-      padding: 24px;
-      min-height: 158px;
-      display: flex;
+        border-radius: 24px;
+        border: 1px solid rgba(255,255,255,0.1);
+        background: rgba(255,255,255,0.05);
+        padding: 24px;
+        min-height: 158px;
+        display: flex;
       flex-direction: column;
       gap: 16px;
       backdrop-filter: blur(22px);
@@ -450,4 +444,6 @@
     </section>
   </div>
 </body>
+</html>
+    </head>
 </html>
