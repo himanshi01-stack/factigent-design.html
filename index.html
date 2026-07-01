@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Factigent Theme Gallery</title>
+    <style>
+      :root {
+        color-scheme: dark;
+        font-family: Inter, system-ui, Arial, sans-serif;
+        background: #051f29;
+        color: #eef6fb;
+      }
+
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        min-height: 100vh;
+        display: grid;
+        place-items: center;
+        padding: 24px;
+        background: radial-gradient(circle at top, #123b4d, #051f29 62%);
+      }
+
+      .card {
+        width: min(900px, 100%);
+        background: rgba(255,255,255,0.08);
+        border: 1px solid rgba(255,255,255,0.16);
+        border-radius: 28px;
+        padding: 40px;
+        box-shadow: 0 30px 80px rgba(0,0,0,0.25);
+        backdrop-filter: blur(20px);
+      }
+
+      h1 { margin: 0 0 12px; font-size: clamp(2rem, 3vw, 2.8rem); }
+      p { line-height: 1.7; color: #d8eef8; }
+      a {
+        display: inline-block;
+        margin-top: 16px;
+        padding: 12px 18px;
+        border-radius: 999px;
+        background: linear-gradient(90deg, #10b6d0, #0a91ad);
+        color: white;
+        text-decoration: none;
+        font-weight: 700;
+      }
+    </style>
+  </head>
+  <body>
+    <main class="card">
+      <h1>Factigent design theme gallery</h1>
+      <p>A fresh alternate version of the Factigent experience is now available with multiple colour theme suggestions for product, marketing, and admin-focused layouts.</p>
+      <a href="theme-suggestions.html">Open the theme showcase</a>
+    </main>
+  </body>
+</html>

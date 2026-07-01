@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Factigent Color Theme Suggestions</title>
+    <style>
+      :root {
+        --bg: #051f29;
+        --panel: #0c4a57;
+        --panel-2: #103b49;
+        --text: #eef6fb;
+        --muted: #d8eef8;
+        --accent: #10b6d0;
+        --accent-2: #0a91ad;
+        --card: rgba(255,255,255,0.08);
+        --border: rgba(255,255,255,0.16);
+      }
+
+      :root[data-theme="sunset"] {
+        --bg: #25111c;
+        --panel: #6e2f3d;
+        --panel-2: #4c2230;
+        --text: #fff4f7;
+        --muted: #ffd7de;
+        --accent: #ff7b63;
+        --accent-2: #e0475f;
+        --card: rgba(255,255,255,0.1);
+        --border: rgba(255,255,255,0.18);
+      }
+
+      :root[data-theme="forest"] {
+        --bg: #06180f;
+        --panel: #1f4d35;
+        --panel-2: #163726;
+        --text: #eefbf2;
+        --muted: #d9f3e1;
+        --accent: #3fb36b;
+        --accent-2: #1f8f4d;
+        --card: rgba(255,255,255,0.09);
+        --border: rgba(255,255,255,0.16);
+      }
+
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        min-height: 100vh;
+        background: linear-gradient(135deg, var(--bg), var(--panel-2));
+        color: var(--text);
+        font-family: Inter, system-ui, Arial, sans-serif;
+        padding: 24px;
+      }
+
+      .container {
+        width: min(1180px, 100%);
+        margin: 0 auto;
+        display: grid;
+        gap: 24px;
+      }
+
+      .topbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 16px;
+        flex-wrap: wrap;
+      }
+
+      .theme-switcher {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+
+      .theme-chip {
+        border: 1px solid var(--border);
+        background: var(--card);
+        color: var(--text);
+        padding: 10px 14px;
+        border-radius: 999px;
+        cursor: pointer;
+        font-weight: 600;
+      }
+
+      .theme-chip.active {
+        background: linear-gradient(90deg, var(--accent), var(--accent-2));
+        color: white;
+      }
+
+      .page {
+        display: grid;
+        grid-template-columns: 1.05fr 0.95fr;
+        gap: 24px;
+      }
+
+      .panel {
+        border-radius: 30px;
+        padding: 36px;
+        background: linear-gradient(180deg, var(--panel), var(--panel-2));
+        border: 1px solid var(--border);
+        box-shadow: 0 24px 70px rgba(0,0,0,0.2);
+      }
+
+      .hero-copy h1 {
+        margin: 0 0 12px;
+        font-size: clamp(2.4rem, 3vw, 3.3rem);
+        line-height: 1;
+      }
+
+      .hero-copy p {
+        margin: 0;
+        color: var(--muted);
+        line-height: 1.8;
+        max-width: 620px;
+      }
+
+      .stats {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 14px;
+        margin-top: 28px;
+      }
+
+      .stat-card {
+        padding: 18px;
+        border-radius: 20px;
+        background: rgba(255,255,255,0.08);
+        border: 1px solid var(--border);
+      }
+
+      .stat-card strong { display: block; margin-bottom: 8px; }
+      .stat-card span { color: var(--muted); font-size: 0.95rem; }
+
+      .auth-card {
+        display: grid;
+        gap: 18px;
+      }
+
+      .badge {
+        width: fit-content;
+        padding: 10px 14px;
+        border-radius: 999px;
+        background: rgba(255,255,255,0.1);
+        color: var(--muted);
+        font-weight: 600;
+      }
+
+      .form {
+        padding: 24px;
+        border-radius: 24px;
+        background: var(--card);
+        border: 1px solid var(--border);
+        display: grid;
+        gap: 16px;
+      }
+
+      .field { display: grid; gap: 8px; }
+      label { font-size: 0.95rem; color: var(--muted); }
+      input {
+        width: 100%;
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        padding: 14px 16px;
+        background: rgba(255,255,255,0.08);
+        color: var(--text);
+      }
+      button {
+        border: none;
+        border-radius: 14px;
+        padding: 14px 16px;
+        font-weight: 700;
+        color: white;
+        background: linear-gradient(90deg, var(--accent), var(--accent-2));
+        cursor: pointer;
+      }
+
+      .theme-note {
+        padding: 16px 18px;
+        border-radius: 18px;
+        background: rgba(255,255,255,0.07);
+        border: 1px dashed var(--border);
+        color: var(--muted);
+        line-height: 1.7;
+      }
+
+      @media (max-width: 900px) {
+        .page { grid-template-columns: 1fr; }
+        .stats { grid-template-columns: 1fr; }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="topbar">
+        <div>
+          <h2 style="margin:0;">Factigent theme suggestions</h2>
+          <p style="margin:6px 0 0; color: var(--muted);">Try each palette and choose the one that fits your audience.</p>
+        </div>
+        <div class="theme-switcher">
+          <button class="theme-chip active" data-theme="ocean">Ocean</button>
+          <button class="theme-chip" data-theme="sunset">Sunset</button>
+          <button class="theme-chip" data-theme="forest">Forest</button>
+        </div>
+      </div>
+
+      <div class="page">
+        <section class="panel hero-copy">
+          <div class="badge">Suggested palette preview</div>
+          <h1>Factory Intelligence, reimagined.</h1>
+          <p>These theme directions keep the same structure while changing the mood for product, investor, and operational experiences.</p>
+
+          <div class="stats">
+            <article class="stat-card">
+              <strong>Ocean</strong>
+              <span>Calm and technical, ideal for enterprise dashboards.</span>
+            </article>
+            <article class="stat-card">
+              <strong>Sunset</strong>
+              <span>Warm and energetic, great for executive storytelling.</span>
+            </article>
+            <article class="stat-card">
+              <strong>Forest</strong>
+              <span>Grounded and sustainable, perfect for operational trust.</span>
+            </article>
+          </div>
+        </section>
+
+        <section class="panel auth-card">
+          <div class="badge">Preview mockup</div>
+          <div class="form">
+            <div class="field">
+              <label for="username">Username</label>
+              <input id="username" placeholder="Enter your username" />
+            </div>
+            <div class="field">
+              <label for="password">Password</label>
+              <input id="password" type="password" placeholder="Enter your password" />
+            </div>
+            <button>Sign in</button>
+          </div>
+          <div class="theme-note">
+            Tip: use the chip buttons above to quickly compare how each color system changes the same interface without changing the layout.
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <script>
+      const chips = document.querySelectorAll('.theme-chip');
+      chips.forEach((chip) => {
+        chip.addEventListener('click', () => {
+          chips.forEach((item) => item.classList.remove('active'));
+          chip.classList.add('active');
+          document.documentElement.setAttribute('data-theme', chip.dataset.theme);
+        });
+      });
+    </script>
+  </body>
+</html>
