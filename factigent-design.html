@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Factigent Design</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      font-family: Inter, system-ui, Arial, sans-serif;
+      background: #051f29;
+      color: #eef6fb;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: #051f29;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+    }
+
+    .page {
+      width: min(1240px, 100%);
+      min-height: 780px;
+      border-radius: 32px;
+      overflow: hidden;
+      box-shadow: 0 40px 120px rgba(0, 0, 0, 0.25);
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      background: linear-gradient(180deg, #0c4a57 0%, #103b49 38%, #0a4a5d 100%);
+    }
+
+    .hero-panel,
+    .auth-panel {
+      padding: 48px 56px;
+      display: flex;
+      flex-direction: column;
+      gap: 36px;
+    }
+
+    .hero-panel {
+      background: linear-gradient(180deg, rgba(15, 87, 110, 0.98), rgba(8, 52, 67, 0.95));
+      justify-content: space-between;
+      position: relative;
+    }
+
+    .hero-panel::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 20% 25%, rgba(168, 236, 255, 0.16), transparent 24%),
+                  radial-gradient(circle at 80% 50%, rgba(255, 255, 255, 0.08), transparent 18%);
+      pointer-events: none;
+    }
+
+    .hero-panel > * {
+      position: relative;
+      z-index: 1;
+    }
+
+    .brand-mark {
+      width: 72px;
+      height: 72px;
+      border-radius: 22px;
+      display: grid;
+      place-items: center;
+      background: rgba(255, 255, 255, 0.18);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,.06);
+    }
+
+    .brand-mark svg {
+      width: 30px;
+      height: 30px;
+      filter: drop-shadow(0 4px 16px rgba(0,0,0,0.12));
+    }
+
+    .hero-copy {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .hero-copy h1 {
+      margin: 0;
+      font-size: clamp(3rem, 4vw, 4.8rem);
+      line-height: 0.95;
+      letter-spacing: -0.04em;
+      color: #b8f0ff;
+    }
+
+    .hero-copy p {
+      max-width: 680px;
+      margin: 0;
+      font-size: 1.05rem;
+      line-height: 1.85;
+      color: #d8eef8;
+    }
+
+    .hero-stats {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+      align-items: stretch;
+    }
+
+    .stat-card {
+      border-radius: 24px;
+      border: 1px solid rgba(255,255,255,0.1);
+      background: rgba(255,255,255,0.05);
+      padding: 24px;
+      min-height: 158px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      backdrop-filter: blur(22px);
+    }
+
+    .stat-card span {
+      width: 40px;
+      height: 40px;
+      display: grid;
+      place-items: center;
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .stat-card strong {
+      font-size: 1.02rem;
+      display: block;
+      color: #f7fbff;
+    }
+
+    .stat-card p {
+      margin: 0;
+      color: #cde8f8;
+      line-height: 1.6;
+      font-size: 0.97rem;
+    }
+
+    .auth-panel {
+      justify-content: flex-start;
+      background: #f8fbfd;
+      color: #172533;
+    }
+
+    .auth-panel .secure-badge {
+      align-self: start;
+      display: inline-flex;
+      gap: 10px;
+      align-items: center;
+      border: 1px solid #d4e5ef;
+      background: #f4fbff;
+      color: #13607b;
+      padding: 10px 16px;
+      border-radius: 999px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      width: fit-content;
+    }
+
+    .auth-panel h2 {
+      margin: 0;
+      font-size: clamp(2.2rem, 3vw, 3rem);
+      line-height: 1.05;
+    }
+
+    .auth-panel p.subtitle {
+      margin: 0;
+      max-width: 440px;
+      font-size: 1rem;
+      color: #556a7a;
+      line-height: 1.75;
+    }
+
+    .auth-form {
+      width: 100%;
+      max-width: 520px;
+      display: grid;
+      gap: 20px;
+      background: #fff;
+      border-radius: 28px;
+      padding: 32px;
+      box-shadow: 0 20px 60px rgba(30, 70, 100, 0.08);
+    }
+
+    .field {
+      display: grid;
+      gap: 10px;
+    }
+
+    .field label {
+      font-size: 0.95rem;
+      color: #556a7a;
+      font-weight: 600;
+    }
+
+    .field input {
+      width: 100%;
+      border-radius: 16px;
+      border: 1px solid #d6e2eb;
+      background: #f9fbfd;
+      color: #122034;
+      padding: 16px 18px;
+      font-size: 0.97rem;
+      outline: none;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .field input:focus {
+      border-color: #49b8db;
+      box-shadow: 0 0 0 4px rgba(64, 164, 224, 0.12);
+    }
+
+    .inline-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .checkbox-row {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      color: #4b6373;
+      font-size: 0.95rem;
+    }
+
+    .checkbox-row input {
+      width: 16px;
+      height: 16px;
+      accent-color: #0faac7;
+    }
+
+    .auth-button {
+      display: inline-flex;
+      width: 100%;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      border: none;
+      border-radius: 16px;
+      padding: 16px 18px;
+      background: linear-gradient(90deg, #10b6d0, #0a91ad);
+      color: white;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .auth-button:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 20px 40px rgba(16, 182, 208, 0.24);
+    }
+
+    .divider-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: #9eb2c1;
+      font-size: 0.92rem;
+    }
+
+    .divider-row::before,
+    .divider-row::after {
+      content: "";
+      flex: 1;
+      height: 1px;
+      background: #e5eef7;
+    }
+
+    .alt-action {
+      display: inline-flex;
+      width: 100%;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      border: 1px solid #d4e5ef;
+      border-radius: 16px;
+      padding: 14px 16px;
+      font-size: 0.98rem;
+      color: #1f5a79;
+      background: #f8fbfd;
+      cursor: pointer;
+    }
+
+    .alt-action svg {
+      width: 20px;
+      height: 20px;
+    }
+
+    .help-panel {
+      border: 1px solid #dce9f4;
+      border-radius: 24px;
+      padding: 20px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      background: #f7fbff;
+    }
+
+    .help-panel span {
+      color: #5b7a8f;
+      font-size: 0.95rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 600;
+    }
+
+    .help-panel p {
+      margin: 0;
+      line-height: 1.75;
+      color: #566d7f;
+      font-size: 0.95rem;
+    }
+
+    .footer-note {
+      margin-top: auto;
+      color: #86a9bf;
+      font-size: 0.88rem;
+      text-align: left;
+    }
+
+    @media (max-width: 1080px) {
+      .page {
+        grid-template-columns: 1fr;
+        min-height: auto;
+      }
+
+      .hero-panel,
+      .auth-panel {
+        padding: 32px;
+      }
+
+      .hero-stats {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 720px) {
+      body {
+        padding: 16px;
+      }
+
+      .page {
+        border-radius: 24px;
+      }
+
+      .hero-copy h1 {
+        font-size: 2.8rem;
+      }
+
+      .auth-form {
+        padding: 24px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <section class="hero-panel">
+      <div class="brand-mark" aria-hidden="true">
+        <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="32" cy="32" r="24" fill="rgba(255,255,255,0.18)" />
+          <path d="M21 33.5L27.5 26H36.5L43 33.5L36.5 41H27.5L21 33.5Z" fill="white" opacity="0.92" />
+          <path d="M29 26L35.5 33.5L29 41" stroke="#0C4A57" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+      </div>
+
+      <div class="hero-copy">
+        <h1>Factigent</h1>
+        <p>Factory Intelligence System</p>
+        <p>Unified platform for manufacturing excellence, real-time insights, and seamless operations.</p>
+      </div>
+
+      <div class="hero-stats">
+        <article class="stat-card">
+          <span aria-hidden="true">🔒</span>
+          <strong>Secure</strong>
+          <p>Role-aware access across ERP, MES, and FI modules.</p>
+        </article>
+        <article class="stat-card">
+          <span aria-hidden="true">🔗</span>
+          <strong>Connected</strong>
+          <p>Quotations, orders, reports, and approvals stay linked.</p>
+        </article>
+        <article class="stat-card">
+          <span aria-hidden="true">⚙️</span>
+          <strong>Operational</strong>
+          <p>Built for live manufacturing workflows and execution.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="auth-panel">
+      <span class="secure-badge">Secure Login</span>
+      <div>
+        <h2>Welcome Back</h2>
+        <p class="subtitle">Sign in to access your Factory Intelligence workspace.</p>
+      </div>
+
+      <form class="auth-form" action="#" method="post">
+        <div class="field">
+          <label for="username">Username</label>
+          <input id="username" name="username" type="text" placeholder="Enter your username" autocomplete="username" />
+        </div>
+
+        <div class="field">
+          <label for="password">Password</label>
+          <input id="password" name="password" type="password" placeholder="Enter your password" autocomplete="current-password" />
+          <div style="font-size:0.9rem; color:#2f6d8c; text-align:right; margin-top:4px;">Forgot password?</div>
+        </div>
+
+        <div class="inline-row">
+          <label class="checkbox-row"><input type="checkbox" name="remember" /> Remember me</label>
+          <span style="color:#7a8f9f; font-size:0.94rem;">Protected Session</span>
+        </div>
+
+        <button type="submit" class="auth-button">Sign In →</button>
+
+        <div class="divider-row">or continue with</div>
+
+        <button type="button" class="alt-action">
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M23.44 12.25c0-.78-.07-1.53-.2-2.25H12.25v4.26h6.07c-.26 1.4-1.02 2.58-2.17 3.38v2.8h3.5c2.04-1.88 3.22-4.64 3.22-7.99z" fill="#4285F4" />
+            <path d="M12.25 24c2.94 0 5.4-.97 7.2-2.63l-3.5-2.8c-.97.66-2.2 1.05-3.7 1.05-2.85 0-5.27-1.92-6.13-4.5H2.44v2.82C4.24 21.92 8.78 24 12.25 24z" fill="#34A853" />
+            <path d="M6.12 14.02a7.45 7.45 0 010-4.04V7.16H2.44a11.99 11.99 0 000 9.68l3.68-2.82z" fill="#FBBC05" />
+            <path d="M12.25 4.8c1.6 0 3.05.55 4.19 1.64l3.13-3.13C17.66 1.45 15.2.5 12.25.5 8.78.5 4.24 2.58 2.44 5.98l3.68 2.82C7 6.72 9.4 4.8 12.25 4.8z" fill="#EA4335" />
+          </svg>
+          Sign in with Google
+        </button>
+
+        <div class="help-panel">
+          <span>Need access?</span>
+          <p>Contact your Factigent administrator for credentials, role assignment, or password support.</p>
+        </div>
+
+        <p class="footer-note">© 2026 Factigent Systems. All rights reserved.</p>
+      </form>
+    </section>
+  </div>
+</body>
+</html>
