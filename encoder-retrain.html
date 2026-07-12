@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Encoder Retrain — Factigent</title>
+    <link rel="stylesheet" href="../styles.css" />
+    <style>
+      /* Page-specific layout while reusing the design system variables */
+      .retrain-shell {
+        min-height: 100vh;
+        display: grid;
+        grid-template-columns: 1fr 420px;
+        gap: 28px;
+        padding: 48px;
+        background: radial-gradient(circle at top left, rgba(6,182,212,0.06), transparent 28%), var(--bg);
+        color: var(--text);
+        font-family: Inter, system-ui, Arial, sans-serif;
+      }
+
+      .panel-card {
+        border-radius: 20px;
+        padding: 28px;
+        background: var(--surface, rgba(255,255,255,0.03));
+        border: 1px solid var(--border, rgba(255,255,255,0.06));
+        box-shadow: var(--shadow, 0 20px 60px rgba(2,6,23,0.15));
+      }
+
+      .hero-title { margin: 0 0 8px; font-size: 1.6rem; }
+      .hero-sub { margin: 0 0 18px; color: var(--muted); }
+
+      .form-grid { display: grid; gap: 14px; }
+
+      .row { display: flex; gap: 12px; align-items: center; }
+
+      .file-drop {
+        border: 1px dashed var(--border);
+        padding: 18px;
+        border-radius: 12px;
+        background: rgba(255,255,255,0.02);
+        color: var(--muted);
+      }
+
+      label { font-weight: 600; color: var(--text); }
+
+      .small { font-size: 0.9rem; color: var(--muted); }
+
+      .controls { display: grid; gap: 12px; margin-top: 6px; }
+
+      .preview-box {
+        height: 180px;
+        border-radius: 12px;
+        border: 1px solid var(--border);
+        background: linear-gradient(180deg, var(--surface-2, rgba(255,255,255,0.02)), var(--surface, rgba(255,255,255,0.03)));
+        display: grid;
+        place-items: center;
+        color: var(--muted);
+      }
+
+      .log-area {
+        height: 220px;
+        overflow: auto;
+        padding: 12px;
+        border-radius: 12px;
+        background: rgba(0,0,0,0.04);
+        color: var(--muted);
+        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, monospace;
+        font-size: 0.95rem;
+      }
+
+      .progress-bar {
+        height: 12px;
+        background: rgba(15,23,42,0.06);
+        border-radius: 999px;
+        overflow: hidden;
+      }
+
+      .progress-fill {
+        height: 100%;
+        width: 0%;
+        background: linear-gradient(90deg, var(--accent), var(--accent-2));
+        transition: width 300ms linear;
+      }
+
+      @media (max-width: 900px) {
+        .retrain-shell { grid-template-columns: 1fr; padding: 24px; }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="retrain-shell">
+      <section class="panel-card">
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;">
+          <div>
+            <h1 class="hero-title">Encoder retrain</h1>
+            <p class="hero-sub">Retrain the encoder model with new data. Use conservative defaults for safety.</p>
+          </div>
+          <div class="secure-pill">Beta</div>
+        </div>
+
+        <div class="form-grid" style="margin-top:18px">
+          <div>
+            <label>Training dataset</label>
+            <div class="file-drop" id="fileDrop">
+              <input id="fileInput" type="file" accept=".zip,.tar,.csv,.json" style="width:100%" />
+              <div class="small" style="margin-top:8px">Upload a dataset archive or formatted CSV/JSON. Max 500MB.</div>
+            </div>
+          </div>
+
+          <div>
+            <label>Hyperparameters</label>
+            <div class="controls">
+              <div class="row">
+                <div style="flex:1">
+                  <div style="display:flex;justify-content:space-between;align-items:center"><label style="margin:0">Learning rate</label><div class="small">Recommended: 1e-5</div></div>
+                  <input id="lr" type="number" step="0.000001" value="0.00001" style="width:100%;padding:10px;border-radius:10px;border:1px solid var(--border);background:var(--surface-2);color:var(--text)" />
+                </div>
+                <div style="width:120px">
+                  <label style="margin:0">Batch</label>
+                  <input id="batch" type="number" value="32" style="width:100%;padding:10px;border-radius:10px;border:1px solid var(--border);background:var(--surface-2);color:var(--text)" />
+                </div>
+              </div>
+
+              <div class="row">
+                <div style="flex:1">
+                  <label style="margin:0">Epochs</label>
+                  <input id="epochs" type="number" value="3" style="width:100%;padding:10px;border-radius:10px;border:1px solid var(--border);background:var(--surface-2);color:var(--text)" />
+                </div>
+                <div style="width:120px">
+                  <label style="margin:0">Warmup %</label>
+                  <input id="warmup" type="number" value="0" style="width:100%;padding:10px;border-radius:10px;border:1px solid var(--border);background:var(--surface-2);color:var(--text)" />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div style="display:flex;gap:12px;align-items:center">
+            <button id="retrainBtn" class="primary-btn" style="width:180px">Start retrain</button>
+            <button id="cancelBtn" class="ghost-btn" style="width:120px">Cancel</button>
+            <div style="flex:1;text-align:right;color:var(--muted)" id="statusText">Idle</div>
+          </div>
+
+          <div>
+            <label>Progress</label>
+            <div class="progress-bar"><div id="progress" class="progress-fill"></div></div>
+          </div>
+
+          <div>
+            <label>Live log</label>
+            <div id="logs" class="log-area">No activity yet.</div>
+          </div>
+        </div>
+      </section>
+
+      <aside class="panel-card">
+        <h3 style="margin:0 0 8px">Preview</h3>
+        <p class="small" style="margin:0 0 12px">A lightweight preview of the embedding space and quick evaluation metrics.</p>
+
+        <div class="preview-box" id="previewBox">Embedding preview</div>
+
+        <div style="margin-top:18px">
+          <h4 style="margin:0 0 8px">Quick eval</h4>
+          <div style="display:grid;gap:10px">
+            <div style="display:flex;justify-content:space-between"><strong>Cosine sim</strong><span class="small" id="cosSim">—</span></div>
+            <div style="display:flex;justify-content:space-between"><strong>Recall@10</strong><span class="small" id="recall">—</span></div>
+            <div style="display:flex;justify-content:space-between"><strong>Loss</strong><span class="small" id="loss">—</span></div>
+          </div>
+        </div>
+
+        <div style="margin-top:18px">
+          <h4 style="margin:0 0 8px">Notes</h4>
+          <div class="theme-note small">Retraining will produce a new encoder snapshot. Validate on a holdout set before deploying to production.</div>
+        </div>
+      </aside>
+    </main>
+
+    <script>
+      const retrainBtn = document.getElementById('retrainBtn');
+      const cancelBtn = document.getElementById('cancelBtn');
+      const logs = document.getElementById('logs');
+      const progress = document.getElementById('progress');
+      const statusText = document.getElementById('statusText');
+      const cosSim = document.getElementById('cosSim');
+      const recall = document.getElementById('recall');
+      const loss = document.getElementById('loss');
+
+      let interval = null;
+
+      function appendLog(line) {
+        if (logs.textContent.trim() === 'No activity yet.') logs.textContent = '';
+        const now = new Date().toLocaleTimeString();
+        logs.textContent += `[${now}] ${line}\n`;
+        logs.scrollTop = logs.scrollHeight;
+      }
+
+      retrainBtn.addEventListener('click', () => {
+        retrainBtn.disabled = true;
+        statusText.textContent = 'Running';
+        appendLog('Starting retrain job...');
+        let pct = 0;
+        progress.style.width = '0%';
+        interval = setInterval(() => {
+          pct += Math.random() * 8 + 4; // progress simulation
+          if (pct >= 100) pct = 100;
+          progress.style.width = pct + '%';
+          appendLog(`Progress ${Math.round(pct)}%`);
+          // update quick eval with simulated values
+          cosSim.textContent = (0.6 + Math.random() * 0.35).toFixed(3);
+          recall.textContent = (0.2 + Math.random() * 0.6).toFixed(3);
+          loss.textContent = (0.8 - Math.random() * 0.5).toFixed(3);
+
+          if (pct >= 100) {
+            clearInterval(interval);
+            appendLog('Retrain finished. Snapshot saved as encoder-v2.');
+            statusText.textContent = 'Completed';
+            retrainBtn.disabled = false;
+          }
+        }, 800);
+      });
+
+      cancelBtn.addEventListener('click', () => {
+        if (interval) {
+          clearInterval(interval);
+          appendLog('Retrain cancelled by user.');
+          statusText.textContent = 'Cancelled';
+          progress.style.width = '0%';
+          retrainBtn.disabled = false;
+        } else {
+          appendLog('No active job to cancel.');
+        }
+      });
+    </script>
+  </body>
+</html>
