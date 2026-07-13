@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Encoder Retrain — Factigent</title>
+    <link rel="stylesheet" href="../styles.css" />
+    <style>
+      :root {
+        color-scheme: light;
+        --bg: #f8fbff;
+        --surface: #ffffff;
+        --surface-2: #eef6ff;
+        --text: #0f172a;
+        --muted: #64748b;
+        --border: rgba(15, 23, 42, 0.1);
+        --accent: #06b6d4;
+        --accent-2: #0ea5e9;
+        --shadow: 0 24px 80px rgba(15, 23, 42, 0.08);
+      }
+
+      /* Page-specific layout while reusing the design system variables */
+      .retrain-shell {
+        min-height: 100vh;
+        display: grid;
+        grid-template-columns: 1fr 420px;
+        gap: 28px;
+        padding: 48px;
+        background: radial-gradient(circle at top left, rgba(6,182,212,0.06), transparent 28%), var(--bg);
+        color: var(--text);
+        font-family: 'Inter', system-ui, Arial, sans-serif;
+      }
+
+      .panel-card {
+        border-radius: 20px;
+        padding: 28px;
+        background: var(--surface, rgba(255,255,255,0.03));
+        border: 1px solid var(--border, rgba(255,255,255,0.06));
+        box-shadow: var(--shadow, 0 20px 60px rgba(2,6,23,0.15));
+      }
+
+      .hero-title { margin: 0 0 8px; font-size: 1.6rem; }
+      .hero-sub { margin: 0 0 18px; color: var(--muted); }
+
+      .section-title {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin: 0 0 12px;
+        font-size: 0.95rem;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        color: var(--muted);
+      }
+
+      .section-title::before {
+        content: "";
+        width: 8px;
+        height: 8px;
+        border-radius: 999px;
+        background: linear-gradient(90deg, var(--accent), var(--accent-2));
+      }
+
+      .form-grid { display: grid; gap: 14px; }
+
+      .row { display: flex; gap: 12px; align-items: center; }
+
+      .file-drop {
+        border: 1px dashed var(--border);
+        padding: 18px;
+        border-radius: 12px;
+        background: rgba(255,255,255,0.02);
+        color: var(--muted);
+      }
+
+      label { font-weight: 600; color: var(--text); }
+
+      .small { font-size: 0.9rem; color: var(--muted); }
+
+      .controls { display: grid; gap: 12px; margin-top: 6px; }
+
+      .field-group {
+        display: grid;
+        gap: 8px;
+      }
+
+      .field-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+      }
+
+      .preview-box {
+        height: 180px;
+        border-radius: 12px;
+        border: 1px solid var(--border);
+        background: linear-gradient(180deg, var(--surface-2, rgba(255,255,255,0.02)), var(--surface, rgba(255,255,255,0.03)));
+        display: grid;
+        place-items: center;
+        color: var(--muted);
+      }
+
+      .preview-card {
+        margin-top: 16px;
+        padding: 16px;
+        border-radius: 14px;
+        border: 1px solid var(--border);
+        background: rgba(255,255,255,0.025);
+      }
+
+      .preview-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 10px;
+        margin-bottom: 10px;
+      }
+
+      .preview-label {
+        font-size: 0.74rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--muted);
+        margin-bottom: 4px;
+      }
+
+      .preview-title {
+        font-size: 1.02rem;
+        font-weight: 700;
+        color: var(--text);
+      }
+
+      .status-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 6px 10px;
+        border-radius: 999px;
+        background: rgba(6, 182, 212, 0.14);
+        color: var(--accent);
+        font-size: 0.78rem;
+        font-weight: 600;
+      }
+
+      .summary-grid {
+        display: grid;
+        gap: 8px;
+      }
+
+      .summary-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 10px;
+        padding-top: 8px;
+        border-top: 1px solid rgba(255,255,255,0.06);
+      }
+
+      .summary-item:first-child {
+        padding-top: 0;
+        border-top: 0;
+      }
+
+      .summary-value {
+        font-weight: 600;
+        color: var(--text);
+        text-align: right;
+      }
+
+      .encoder-list {
+        display: grid;
+        gap: 10px;
+        margin-top: 18px;
+      }
+
+      .encoder-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+        padding: 12px 14px;
+        border-radius: 12px;
+        border: 1px solid var(--border);
+        background: rgba(255,255,255,0.02);
+      }
+
+      .encoder-name {
+        font-weight: 600;
+        color: var(--text);
+      }
+
+      .encoder-meta {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        color: var(--muted);
+        font-size: 0.9rem;
+      }
+
+      .encoder-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: var(--accent);
+      }
+
+      .encoder-dot.ready {
+        background: #22c55e;
+      }
+
+      .log-area {
+        height: 220px;
+        overflow: auto;
+        padding: 12px;
+        border-radius: 12px;
+        background: rgba(0,0,0,0.04);
+        color: var(--muted);
+        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, monospace;
+        font-size: 0.95rem;
+      }
+
+      .progress-bar {
+        height: 12px;
+        background: rgba(15,23,42,0.06);
+        border-radius: 999px;
+        overflow: hidden;
+      }
+
+      .progress-fill {
+        height: 100%;
+        width: 0%;
+        background: linear-gradient(90deg, var(--accent), var(--accent-2));
+        transition: width 300ms linear;
+      }
+
+      @media (max-width: 900px) {
+        .retrain-shell { grid-template-columns: 1fr; padding: 24px; }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="retrain-shell">
+      <section class="panel-card">
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;">
+          <div>
+            <h1 class="hero-title">Encoder retrain</h1>
+            <p class="hero-sub">Retrain the encoder model with new data. Use conservative defaults for safety.</p>
+          </div>
+          <div class="secure-pill">Beta</div>
+        </div>
+
+        <h2 class="section-title" style="margin-top:18px">Input</h2>
+        <div class="form-grid">
+          <div class="field-group">
+            <label>Machine name</label>
+            <input id="machineName" type="text" value="Encoder-01" style="width:100%;padding:10px;border-radius:10px;border:1px solid var(--border);background:var(--surface-2);color:var(--text)" />
+          </div>
+
+          <div class="field-row">
+            <div class="field-group">
+              <label>Parameter name</label>
+              <input id="parameterName" type="text" value="embedding-config-v2" style="width:100%;padding:10px;border-radius:10px;border:1px solid var(--border);background:var(--surface-2);color:var(--text)" />
+            </div>
+            <div class="field-group">
+              <label>Retrained by</label>
+              <input id="retrainedBy" type="text" value="Alex Morgan" style="width:100%;padding:10px;border-radius:10px;border:1px solid var(--border);background:var(--surface-2);color:var(--text)" />
+            </div>
+          </div>
+
+          <div>
+            <label>Training dataset</label>
+            <div class="file-drop" id="fileDrop">
+              <input id="fileInput" type="file" accept=".zip,.tar,.csv,.json" style="width:100%" />
+              <div class="small" style="margin-top:8px">Upload a dataset archive or formatted CSV/JSON. Max 500MB.</div>
+            </div>
+          </div>
+
+          <div>
+            <label>Hyperparameters</label>
+            <div class="controls">
+              <div class="row">
+                <div style="flex:1">
+                  <div style="display:flex;justify-content:space-between;align-items:center"><label style="margin:0">Learning rate</label><div class="small">Recommended: 1e-5</div></div>
+                  <input id="lr" type="number" step="0.000001" value="0.00001" style="width:100%;padding:10px;border-radius:10px;border:1px solid var(--border);background:var(--surface-2);color:var(--text)" />
+                </div>
+                <div style="width:120px">
+                  <label style="margin:0">Batch</label>
+                  <input id="batch" type="number" value="32" style="width:100%;padding:10px;border-radius:10px;border:1px solid var(--border);background:var(--surface-2);color:var(--text)" />
+                </div>
+              </div>
+
+              <div class="row">
+                <div style="flex:1">
+                  <label style="margin:0">Epochs</label>
+                  <input id="epochs" type="number" value="3" style="width:100%;padding:10px;border-radius:10px;border:1px solid var(--border);background:var(--surface-2);color:var(--text)" />
+                </div>
+                <div style="width:120px">
+                  <label style="margin:0">Warmup %</label>
+                  <input id="warmup" type="number" value="0" style="width:100%;padding:10px;border-radius:10px;border:1px solid var(--border);background:var(--surface-2);color:var(--text)" />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div style="display:flex;gap:12px;align-items:center">
+            <button id="retrainBtn" class="primary-btn" style="width:180px">Start retrain</button>
+            <button id="cancelBtn" class="ghost-btn" style="width:120px">Cancel</button>
+            <div style="flex:1;text-align:right;color:var(--muted)" id="statusText">Idle</div>
+          </div>
+
+          <div>
+            <label>Progress</label>
+            <div class="progress-bar"><div id="progress" class="progress-fill"></div></div>
+          </div>
+
+          <div>
+            <label>Live log</label>
+            <div id="logs" class="log-area">No activity yet.</div>
+          </div>
+        </div>
+      </section>
+
+      <aside class="panel-card">
+        <h3 style="margin:0 0 8px">Preview</h3>
+        <p class="small" style="margin:0 0 12px">A compact view of the latest retrain status, timing, and available encoder snapshots.</p>
+
+        <div class="preview-box" id="previewBox">Embedding preview</div>
+
+        <div class="preview-card">
+          <div class="preview-top">
+            <div>
+              <div class="preview-label">Latest retrain</div>
+              <div class="preview-title">Encoder v2</div>
+            </div>
+            <span class="status-pill">Completed</span>
+          </div>
+          <div class="summary-grid">
+            <div class="summary-item"><span class="small">Status</span><span class="summary-value">Completed</span></div>
+            <div class="summary-item"><span class="small">Time</span><span class="summary-value">10 Jul 2026, 09:15</span></div>
+            <div class="summary-item"><span class="small">Retrained by</span><span class="summary-value">Alice Chen</span></div>
+          </div>
+        </div>
+
+        <div style="margin-top:18px">
+          <h4 style="margin:0 0 8px">Quick eval</h4>
+          <div style="display:grid;gap:10px">
+            <div style="display:flex;justify-content:space-between"><strong>Cosine sim</strong><span class="small" id="cosSim">—</span></div>
+            <div style="display:flex;justify-content:space-between"><strong>Recall@10</strong><span class="small" id="recall">—</span></div>
+            <div style="display:flex;justify-content:space-between"><strong>Loss</strong><span class="small" id="loss">—</span></div>
+          </div>
+        </div>
+
+        <div class="encoder-list">
+          <div style="display:flex;justify-content:space-between;align-items:center;gap:8px">
+            <h4 style="margin:0">List of encoders</h4>
+            <span class="small">3 active</span>
+          </div>
+          <div class="encoder-item">
+            <div>
+              <div class="encoder-name">Encoder A</div>
+              <div class="small">Primary production model</div>
+            </div>
+            <div class="encoder-meta"><span class="encoder-dot ready"></span> Ready</div>
+          </div>
+          <div class="encoder-item">
+            <div>
+              <div class="encoder-name">Encoder B</div>
+              <div class="small">Staging / QA validation</div>
+            </div>
+            <div class="encoder-meta"><span class="encoder-dot"></span> Review</div>
+          </div>
+          <div class="encoder-item">
+            <div>
+              <div class="encoder-name">Encoder C</div>
+              <div class="small">Experimental snapshot</div>
+            </div>
+            <div class="encoder-meta"><span class="encoder-dot ready"></span> Ready</div>
+          </div>
+        </div>
+      </aside>
+    </main>
+
+    <script>
+      const retrainBtn = document.getElementById('retrainBtn');
+      const cancelBtn = document.getElementById('cancelBtn');
+      const logs = document.getElementById('logs');
+      const progress = document.getElementById('progress');
+      const statusText = document.getElementById('statusText');
+      const cosSim = document.getElementById('cosSim');
+      const recall = document.getElementById('recall');
+      const loss = document.getElementById('loss');
+
+      let interval = null;
+
+      function appendLog(line) {
+        if (logs.textContent.trim() === 'No activity yet.') logs.textContent = '';
+        const now = new Date().toLocaleTimeString();
+        logs.textContent += `[${now}] ${line}\n`;
+        logs.scrollTop = logs.scrollHeight;
+      }
+
+      retrainBtn.addEventListener('click', () => {
+        retrainBtn.disabled = true;
+        statusText.textContent = 'Running';
+        appendLog('Starting retrain job...');
+        let pct = 0;
+        progress.style.width = '0%';
+        interval = setInterval(() => {
+          pct += Math.random() * 8 + 4; // progress simulation
+          if (pct >= 100) pct = 100;
+          progress.style.width = pct + '%';
+          appendLog(`Progress ${Math.round(pct)}%`);
+          // update quick eval with simulated values
+          cosSim.textContent = (0.6 + Math.random() * 0.35).toFixed(3);
+          recall.textContent = (0.2 + Math.random() * 0.6).toFixed(3);
+          loss.textContent = (0.8 - Math.random() * 0.5).toFixed(3);
+
+          if (pct >= 100) {
+            clearInterval(interval);
+            appendLog('Retrain finished. Snapshot saved as encoder-v2.');
+            statusText.textContent = 'Completed';
+            retrainBtn.disabled = false;
+          }
+        }, 800);
+      });
+
+      cancelBtn.addEventListener('click', () => {
+        if (interval) {
+          clearInterval(interval);
+          appendLog('Retrain cancelled by user.');
+          statusText.textContent = 'Cancelled';
+          progress.style.width = '0%';
+          retrainBtn.disabled = false;
+        } else {
+          appendLog('No active job to cancel.');
+        }
+      });
+    </script>
+  </body>
+</html>
