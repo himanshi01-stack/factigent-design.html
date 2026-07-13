@@ -101,7 +101,6 @@
         color: var(--muted);
       }
 
-<<<<<<< HEAD
       .preview-card {
         margin-top: 16px;
         padding: 16px;
@@ -210,8 +209,6 @@
         background: #22c55e;
       }
 
-=======
->>>>>>> origin/main
       .log-area {
         height: 220px;
         overflow: auto;
@@ -245,15 +242,6 @@
   <body>
     <main class="retrain-shell">
       <section class="panel-card">
-        <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;">
-          <div>
-            <h1 class="hero-title">Encoder retrain</h1>
-            <p class="hero-sub">Retrain the encoder model with new data. Use conservative defaults for safety.</p>
-          </div>
-          <div class="secure-pill">Beta</div>
-        </div>
-
-<<<<<<< HEAD
         <h2 class="section-title" style="margin-top:18px">Input</h2>
         <div class="form-grid">
           <div class="field-group">
@@ -272,9 +260,6 @@
             </div>
           </div>
 
-=======
-        <div class="form-grid" style="margin-top:18px">
->>>>>>> origin/main
           <div>
             <label>Training dataset</label>
             <div class="file-drop" id="fileDrop">
@@ -330,7 +315,6 @@
 
       <aside class="panel-card">
         <h3 style="margin:0 0 8px">Preview</h3>
-<<<<<<< HEAD
         <p class="small" style="margin:0 0 12px">A compact view of the latest retrain status, timing, and available encoder snapshots.</p>
 
         <div class="preview-box" id="previewBox">Embedding preview</div>
@@ -350,12 +334,6 @@
           </div>
         </div>
 
-=======
-        <p class="small" style="margin:0 0 12px">A lightweight preview of the embedding space and quick evaluation metrics.</p>
-
-        <div class="preview-box" id="previewBox">Embedding preview</div>
-
->>>>>>> origin/main
         <div style="margin-top:18px">
           <h4 style="margin:0 0 8px">Quick eval</h4>
           <div style="display:grid;gap:10px">
@@ -365,7 +343,6 @@
           </div>
         </div>
 
-<<<<<<< HEAD
         <div class="encoder-list">
           <div style="display:flex;justify-content:space-between;align-items:center;gap:8px">
             <h4 style="margin:0">List of encoders</h4>
@@ -392,11 +369,6 @@
             </div>
             <div class="encoder-meta"><span class="encoder-dot ready"></span> Ready</div>
           </div>
-=======
-        <div style="margin-top:18px">
-          <h4 style="margin:0 0 8px">Notes</h4>
-          <div class="theme-note small">Retraining will produce a new encoder snapshot. Validate on a holdout set before deploying to production.</div>
->>>>>>> origin/main
         </div>
       </aside>
     </main>
