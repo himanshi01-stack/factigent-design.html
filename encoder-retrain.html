@@ -306,8 +306,17 @@
         line-height: 1.5;
       }
 
-      .field-group input.retrained-by {
+      .field-group .retrained-by {
+        width: auto;
         max-width: 260px;
+        padding: 10px;
+        border-radius: 10px;
+        border: 1px solid var(--border);
+        background: var(--surface-2);
+        color: var(--text);
+        display: inline-block;
+        box-sizing: border-box;
+        font-size: 0.95rem;
       }
 
       .selection-summary {
@@ -463,7 +472,7 @@
             </div>
             <div class="field-group">
               <label>Retrained by</label>
-              <input id="retrainedBy" class="retrained-by" type="text" value="Alex Morgan" style="padding:10px;border-radius:10px;border:1px solid var(--border);background:var(--surface-2);color:var(--text)" />
+              <input id="retrainedBy" class="retrained-by" type="text" value="Alex Morgan" placeholder="Your name" />
             </div>
           </div>
 
