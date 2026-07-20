@@ -306,6 +306,109 @@
         line-height: 1.5;
       }
 
+      .field-group input.retrained-by {
+        max-width: 260px;
+      }
+
+      .selection-summary {
+        margin-top: 12px;
+        padding: 18px;
+        border-radius: 16px;
+        border: 1px solid var(--border);
+        background: rgba(255,255,255,0.03);
+      }
+
+      .selection-summary .preview-top {
+        flex-wrap: wrap;
+        gap: 20px;
+      }
+
+      .primary-btn,
+      .ghost-btn {
+        border: 1px solid transparent;
+        border-radius: 10px;
+        font-size: 0.95rem;
+        font-weight: 700;
+        padding: 12px 18px;
+        cursor: pointer;
+        transition: background 150ms ease, border-color 150ms ease, color 150ms ease, box-shadow 150ms ease;
+      }
+
+      .primary-btn {
+        background: linear-gradient(90deg, var(--accent), var(--accent-2));
+        color: #fff;
+        border-color: transparent;
+        box-shadow: 0 12px 28px rgba(6, 182, 212, 0.18);
+      }
+
+      .primary-btn:hover:not(:disabled) {
+        filter: brightness(1.05);
+      }
+
+      .ghost-btn {
+        background: transparent;
+        color: var(--text);
+        border-color: rgba(15, 23, 42, 0.12);
+      }
+
+      .ghost-btn:hover:not(:disabled) {
+        background: rgba(15, 23, 42, 0.04);
+      }
+
+      button:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+
+      .selection-summary .preview-title {
+        font-size: 1rem;
+      }
+
+      .encoder-table {
+        display: grid;
+        border-radius: 16px;
+        overflow: hidden;
+        border: 1px solid var(--border);
+        background: rgba(255,255,255,0.02);
+      }
+
+      .encoder-row {
+        display: grid;
+        grid-template-columns: 1.3fr 1fr 1fr;
+        gap: 12px;
+        padding: 14px 16px;
+        align-items: center;
+        border-bottom: 1px solid rgba(255,255,255,0.06);
+      }
+
+      .encoder-row:last-child {
+        border-bottom: 0;
+      }
+
+      .encoder-row-head {
+        background: rgba(15, 23, 42, 0.04);
+        color: var(--muted);
+        font-size: 0.82rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .encoder-cell {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+      }
+
+      .encoder-cell strong {
+        font-weight: 700;
+        color: var(--text);
+      }
+
+      .encoder-status {
+        color: var(--muted);
+        font-size: 0.92rem;
+      }
+
       @media (max-width: 900px) {
         .encoder-card-grid {
           grid-template-columns: 1fr;
@@ -360,39 +463,50 @@
             </div>
             <div class="field-group">
               <label>Retrained by</label>
-              <input id="retrainedBy" type="text" value="Alex Morgan" style="width:100%;padding:10px;border-radius:10px;border:1px solid var(--border);background:var(--surface-2);color:var(--text)" />
+              <input id="retrainedBy" class="retrained-by" type="text" value="Alex Morgan" style="padding:10px;border-radius:10px;border:1px solid var(--border);background:var(--surface-2);color:var(--text)" />
+            </div>
+          </div>
+
+          <div class="selection-summary" id="selectionSummary">
+            <div class="preview-top">
+              <div>
+                <div class="preview-label">Selected machine</div>
+                <div class="preview-title" id="selectedMachineText">None</div>
+              </div>
+              <div>
+                <div class="preview-label">Selected parameters</div>
+                <div class="preview-title" id="selectedParametersText">None</div>
+              </div>
             </div>
           </div>
 
           <div class="encoder-list">
-            <div class="encoder-list-header">
+              <div class="encoder-list-header">
               <h4 style="margin:0">List of encoders</h4>
               <div style="display:flex;gap:8px">
-                <span class="small">2 selected</span>
                 <span class="small">3 available</span>
               </div>
             </div>
-            <div class="encoder-card-grid">
-              <div class="encoder-card selected">
-                <div class="encoder-card-check"></div>
-                <div>
-                  <div class="encoder-name">Encoder A</div>
-                  <div class="encoder-meta">Primary production model</div>
-                </div>
+            <div class="encoder-table">
+              <div class="encoder-row encoder-row-head">
+                <div>Encoder name</div>
+                <div>Model</div>
+                <div>Status</div>
               </div>
-              <div class="encoder-card selected">
-                <div class="encoder-card-check"></div>
-                <div>
-                  <div class="encoder-name">Encoder B</div>
-                  <div class="encoder-meta">Staging / QA validation</div>
-                </div>
+              <div class="encoder-row">
+                <div class="encoder-cell"><strong>Encoder A</strong><span class="encoder-status">Production primary</span></div>
+                <div>Text embedding</div>
+                <div class="encoder-status">Active</div>
               </div>
-              <div class="encoder-card">
-                <div class="encoder-card-check"></div>
-                <div>
-                  <div class="encoder-name">Encoder C</div>
-                  <div class="encoder-meta">Experimental snapshot</div>
-                </div>
+              <div class="encoder-row">
+                <div class="encoder-cell"><strong>Encoder B</strong><span class="encoder-status">QA validation</span></div>
+                <div>Similarity search</div>
+                <div class="encoder-status">Staged</div>
+              </div>
+              <div class="encoder-row">
+                <div class="encoder-cell"><strong>Encoder C</strong><span class="encoder-status">Experimental snapshot</span></div>
+                <div>Vision feature extraction</div>
+                <div class="encoder-status">Preview</div>
               </div>
             </div>
           </div>
@@ -413,6 +527,8 @@
       const machineName = document.getElementById('machineName');
       const parameterName = document.getElementById('parameterName');
       const parameterList = document.getElementById('parameterList');
+      const selectedMachineText = document.getElementById('selectedMachineText');
+      const selectedParametersText = document.getElementById('selectedParametersText');
 
       const demoMachines = [
         'Encoder-01',
@@ -441,10 +557,30 @@
         }
       ];
 
-      function selectParameter(key) {
-        parameterName.value = key;
+      const selectedParameters = new Set();
+
+      function renderSelectionSummary() {
+        selectedMachineText.textContent = machineName.value || 'None';
+        selectedParametersText.textContent = selectedParameters.size
+          ? Array.from(selectedParameters).join(', ')
+          : 'None';
+      }
+
+      function updateParameterValue() {
+        parameterName.value = Array.from(selectedParameters).join(', ');
+      }
+
+      function toggleParameter(key) {
+        if (selectedParameters.has(key)) {
+          selectedParameters.delete(key);
+        } else {
+          selectedParameters.add(key);
+        }
+        updateParameterValue();
+        renderSelectionSummary();
+        updateButtons();
         Array.from(parameterList.children).forEach((card) => {
-          card.classList.toggle('selected', card.dataset.key === key);
+          card.classList.toggle('selected', selectedParameters.has(card.dataset.key));
         });
       }
 
@@ -464,24 +600,40 @@
             <div class="param-card-title">${param.key}</div>
             <div class="param-card-description">${param.description}</div>
           `;
-          card.addEventListener('click', () => selectParameter(param.key));
+          card.addEventListener('click', () => toggleParameter(param.key));
           parameterList.appendChild(card);
         });
 
         machineName.value = demoMachines[0];
-        selectParameter(demoParameters[0].key);
+        renderSelectionSummary();
+        updateParameterValue();
       }
 
       populateDemoData();
 
+      machineName.addEventListener('change', renderSelectionSummary);
+      cancelBtn.disabled = true;
+      retrainBtn.disabled = true;
+
+      function updateButtons() {
+        retrainBtn.disabled = !selectedParameters.size;
+      }
+
       retrainBtn.addEventListener('click', () => {
+        if (!selectedParameters.size) {
+          statusText.textContent = 'Please select at least one parameter';
+          return;
+        }
         retrainBtn.disabled = true;
-        statusText.textContent = 'Running';
+        cancelBtn.disabled = false;
+        statusText.textContent = 'Retraining…';
       });
 
       cancelBtn.addEventListener('click', () => {
         retrainBtn.disabled = false;
-        statusText.textContent = 'Cancelled';
+        cancelBtn.disabled = true;
+        statusText.textContent = 'Retraining cancelled';
+      });
       });
     </script>
   </body>
